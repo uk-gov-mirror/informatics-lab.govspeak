@@ -11,3 +11,6 @@ branches:
     - release
 notifications:
   email: false
+matrix:
+  allow_failures:
+    - rvm: 2.2.0
