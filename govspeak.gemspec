@@ -33,4 +33,5 @@ library for use in the UK Government Single Domain project}
   s.add_development_dependency 'gem_publisher', '~> 1.1.1'
   s.add_development_dependency 'simplecov'
   s.add_development_dependency 'simplecov-rcov'
+  s.add_development_dependency 'test-unit'
 end
