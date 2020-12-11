@@ -8,3 +8,4 @@ pkg/*
 *.pyo
 .venv
 coverage
+.idea
