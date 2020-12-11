@@ -165,6 +165,7 @@ module Govspeak
       (?:\r|\n|$) # non-capturing match to make sure end of line and linebreak
     }x) do |attributes, text, href|
       button_classes = "govuk-button"
+      button_classes << " govuk-button--secondary" if attributes =~ /secondary/
       /cross-domain-tracking:(?<cross_domain_tracking>.[^\s*]+)/ =~ attributes
       data_attribute = ""
       data_attribute << " data-start='true'" if attributes =~ /start/

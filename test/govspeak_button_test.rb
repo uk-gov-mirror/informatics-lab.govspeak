@@ -11,6 +11,11 @@ class GovspeakTest < Minitest::Test
     assert_text_output "Start now"
   end
 
+  test_given_govspeak "{button secondary}[Start now](https://www.registertovote.service.gov.uk/register-to-vote/start){/button}" do
+    assert_html_output '<p><a class="gem-c-button govuk-button gem-c-button--secondary govuk-button--secondary" role="button" href="https://www.registertovote.service.gov.uk/register-to-vote/start">Start now</a></p>'
+    assert_text_output "Start now"
+  end
+
   # The same as above but with line breaks
   test_given_govspeak "{button start cross-domain-tracking:UA-23066786-5}\n\n\n[Start now](https://www.registertovote.service.gov.uk/register-to-vote/start)\n\n\n{/button}" do
     assert_html_output '<p><a class="gem-c-button govuk-button govuk-button--start" role="button" data-module="cross-domain-tracking" data-tracking-code="UA-23066786-5" data-tracking-name="govspeakButtonTracker" href="https://www.registertovote.service.gov.uk/register-to-vote/start"> Start now <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewbox="0 0 33 40" role="presentation" focusable="false"><path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z"></path></svg></a></p>'

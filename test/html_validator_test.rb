@@ -99,6 +99,7 @@ class HtmlValidatorTest < Minitest::Test
   test "allow govspeak button" do
     assert Govspeak::HtmlValidator.new("{button}[Start now](https://gov.uk){/button}").valid?
     assert Govspeak::HtmlValidator.new("{button start}[Start now](https://gov.uk){/button}").valid?
+    assert Govspeak::HtmlValidator.new("{button secondary}[Start now](https://gov.uk){/button}").valid?
     assert Govspeak::HtmlValidator.new("{button start cross-domain-tracking:UA-XXXXXX-Y}[Start now](https://gov.uk){/button}").valid?
   end
 
