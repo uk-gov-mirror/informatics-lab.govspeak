@@ -35,6 +35,14 @@ class HtmlSanitizerTest < Minitest::Test
     )
   end
 
+  test "allow govspeak secondary button markup" do
+    html = "<a href='#' class=\"govuk-button govuk-button--secondary\"></a>"
+    assert_equal(
+      "<a href=\"#\" class=\"govuk-button govuk-button--secondary\"></a>",
+      Govspeak::HtmlSanitizer.new(html).sanitize,
+    )
+  end
+
   test "allow data attributes on links" do
     html = "<a href='/' data-module='track-click' data-ecommerce-path='/' data-track-category='linkClicked'>Test Link</a>"
 

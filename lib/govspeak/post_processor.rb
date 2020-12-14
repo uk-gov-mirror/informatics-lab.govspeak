@@ -104,8 +104,8 @@ module Govspeak
 
     extension("use gem component for buttons") do |document|
       document.css(".govuk-button").map do |el|
-        button_html = GovukPublishingComponents.render(
-          "govuk_publishing_components/components/button",
+        secondary = el.classes.include? "govuk-button--secondary"
+        options = {
           text: el.content,
           href: el["href"],
           start: el["data-start"],
@@ -114,8 +114,14 @@ module Govspeak
             "tracking-code": el["data-tracking-code"],
             "tracking-name": el["data-tracking-name"],
           },
+        }
+        options[:secondary] = secondary
+        button_html = GovukPublishingComponents.render(
+          "govuk_publishing_components/components/button",
+          options,
         ).squish.gsub("> <", "><").gsub!(/\s+/, " ")
 
+        button_html[" gem-c-button--secondary"] = " gem-c-button--secondary govuk-button--secondary" if secondary
         el.swap(button_html)
       end
     end
