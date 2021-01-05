@@ -677,3 +677,37 @@ which outputs
   <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewBox="0 0 33 40" role="presentation" focusable="false"><path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z"></path></svg>
 </a>
 ```
+
+### Accordion
+
+    $Accordion
+    $Heading
+    Heading
+    $EndHeading
+    $Summary
+    Summary
+    $EndSummary
+    $Content
+    Content
+    $EndContent
+    $EndAccordion
+
+creates an accordion
+
+```html
+<div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
+  <div class="govuk-accordion__section ">
+    <div class="govuk-accordion__section-header">
+      <h2 class="govuk-accordion__section-heading">
+        <div class="govuk-accordion__section-button" id="accordion-default-heading-1">
+          Heading
+        </div>
+      </h2>
+      <div>Summary</div>
+    </div>
+    <div id="accordion-default-content-1" class="govuk-accordion__section-content">
+      <div class="govuk-body">Content</div>
+    </div>
+  </div>
+</div>
+```

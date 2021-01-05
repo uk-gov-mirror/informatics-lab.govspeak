@@ -374,6 +374,32 @@ module Govspeak
       %(<govspeak-embed-attachment-link id="#{attachment_id}"></govspeak-embed-attachment-link>)
     end
 
+    extension("Accordion", /#{NEW_PARAGRAPH_LOOKBEHIND}\$Accordion\s*$(.*?)\$EndAccordion/m) do |body|
+      sections = ""
+      index = 1
+      body.scan(/\$Heading\s*([\s\S]*?)\s*\$EndHeading\s*\$Summary\s*([\s\S]*?)\s*\$EndSummary\s*\$Content\s*([\s\S]*?)\s*\$EndContent/) do |heading, summary, content|
+        if summary.present?
+          summary = %(
+      <div>#{summary}</div>)
+        end
+        sections += %(
+  <div class="govuk-accordion__section ">
+    <div class="govuk-accordion__section-header">
+      <h2 class="govuk-accordion__section-heading">
+        <div class="govuk-accordion__section-button" id="accordion-default-heading-#{index}">
+          #{heading}
+        </div>
+      </h2>#{summary}
+    </div>
+    <div id="accordion-default-content-#{index}" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-#{index}">
+      <div class='govuk-body'>#{content}</div>
+    </div>
+  </div>)
+        index += 1
+      end
+      %(<div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">#{sections}</div>)
+    end
+
   private
 
     def kramdown_doc
