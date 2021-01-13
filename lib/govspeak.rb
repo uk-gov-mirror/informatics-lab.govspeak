@@ -406,6 +406,20 @@ module Govspeak
       %(<iframe class="govspeak-embed-video" width="500" height="281" src="#{embed_url}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>)
     end
 
+    extension("Figure", /#{NEW_PARAGRAPH_LOOKBEHIND}\$Figure\s*$(.*?)\s*\$EndFigure/m) do |figure|
+      alt = figure.scan(/\$Alt\s*(.*?)\s*\$EndAlt/m)[0][0]
+      url = figure.scan(/\$URL\s*(.*?)\s*\$EndURL/m)[0][0]
+      caption = figure.scan(/\$Caption\s*(.*?)\s*\$EndCaption/m)[0][0]
+      %(<figure class="image embedded">
+         <div class="img">
+          <img src="#{url}" alt="#{alt}">
+            <figcaption>
+            #{caption}
+            </figcaption>
+         </div>
+       </figure>)
+    end
+
   private
 
     def kramdown_doc
