@@ -417,10 +417,10 @@ module Govspeak
       %(<figure class="image embedded">
          <div class="img">
           <img src="#{url}" alt="#{alt}">
-           <figcaption>
-           #{caption}
-           </figcaption>
          </div>
+         <figcaption>
+          #{caption}
+         </figcaption>
        </figure>)
     end
 
