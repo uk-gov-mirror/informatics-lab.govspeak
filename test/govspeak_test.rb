@@ -906,10 +906,10 @@ $EndFigure"
       assert_html_output(%(<figure class="image embedded">
          <div class="img">
           <img src="https://www.early-career-framework.education.gov.uk/teachfirst/wp-content/uploads/sites/4/2020/08/Part-whole-model.jpg" alt="Example of the part-whole model using the number 28. The number 20 has already been added to the lower left field, the lower right field is blank ready to be filled in.">
-           <figcaption>
-           Figure 1: Part-whole model.
-           </figcaption>
          </div>
+         <figcaption>
+          Figure 1: Part-whole model.
+         </figcaption>
        </figure>))
     end
   end
