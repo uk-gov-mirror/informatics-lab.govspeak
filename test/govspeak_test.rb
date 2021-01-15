@@ -6,6 +6,10 @@ require "ostruct"
 class GovspeakTest < Minitest::Test
   include GovspeakTestHelper
 
+  def compress_html(html)
+    html.gsub(/[\n\r]+[\s]*/, "")
+  end
+
   test "simple smoke-test" do
     rendered = Govspeak::Document.new("*this is markdown*").to_html
     assert_equal "<p><em>this is markdown</em></p>\n", rendered
@@ -853,59 +857,61 @@ Or so we thought.)
   end
 
   test "Accordion with whitespace" do
-    govspeak = "$Accordion
-$Heading Heading 1 $EndHeading
-$SummarySummary 1$EndSummary$Content<span>
-List item 1
-</span>$EndContent
-$Heading Heading 2 $EndHeading$Summary$EndSummary$ContentList item 2$EndContent
-$Heading Heading 3 $EndHeading$Summary$EndSummary$ContentList item 3$EndContent
-$EndAccordion"
+    govspeak = %($Accordion
+      $Heading Heading 1 $EndHeading
+      $SummarySummary 1$EndSummary$Content<span>
+      List item 1
+      </span>$EndContent
+      $Heading Heading 2 $EndHeading$Summary$EndSummary$ContentList item 2$EndContent
+      $Heading Heading 3 $EndHeading$Summary$EndSummary$ContentList item 3$EndContent
+      $EndAccordion)
 
-    given_govspeak(govspeak) do
-      assert_html_output(%(
-<div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
-  <div class="govuk-accordion__section ">
-    <div class="govuk-accordion__section-header">
-      <h2 class="govuk-accordion__section-heading">
-        <div class="govuk-accordion__section-button" id="accordion-default-heading-1">
-          Heading 1
+    rendered = Govspeak::Document.new(govspeak).to_html
+    expected_html_output = %(
+      <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
+        <div class="govuk-accordion__section ">
+          <div class="govuk-accordion__section-header">
+            <h2 class="govuk-accordion__section-heading">
+              <div class="govuk-accordion__section-button" id="accordion-default-heading-1">
+                Heading 1
+              </div>
+            </h2>
+            <div>Summary 1</div>
+          </div>
+          <div id="accordion-default-content-1" class="govuk-accordion__section-content">
+            <div class="govuk-body">
+              <span>
+                List item 1
+              </span>
+            </div>
+          </div>
         </div>
-      </h2>
-      <div>Summary 1</div>
-    </div>
-    <div id="accordion-default-content-1" class="govuk-accordion__section-content">
-      <div class="govuk-body"><span>
-List item 1
-</span></div>
-    </div>
-  </div>
-  <div class="govuk-accordion__section ">
-    <div class="govuk-accordion__section-header">
-      <h2 class="govuk-accordion__section-heading">
-        <div class="govuk-accordion__section-button" id="accordion-default-heading-2">
-          Heading 2
+        <div class="govuk-accordion__section ">
+          <div class="govuk-accordion__section-header">
+            <h2 class="govuk-accordion__section-heading">
+              <div class="govuk-accordion__section-button" id="accordion-default-heading-2">
+                Heading 2
+              </div>
+            </h2>
+          </div>
+          <div id="accordion-default-content-2" class="govuk-accordion__section-content">
+            <div class="govuk-body">List item 2</div>
+          </div>
         </div>
-      </h2>
-    </div>
-    <div id="accordion-default-content-2" class="govuk-accordion__section-content">
-      <div class="govuk-body">List item 2</div>
-    </div>
-  </div>
-  <div class="govuk-accordion__section ">
-    <div class="govuk-accordion__section-header">
-      <h2 class="govuk-accordion__section-heading">
-        <div class="govuk-accordion__section-button" id="accordion-default-heading-3">
-          Heading 3
+        <div class="govuk-accordion__section ">
+          <div class="govuk-accordion__section-header">
+            <h2 class="govuk-accordion__section-heading">
+              <div class="govuk-accordion__section-button" id="accordion-default-heading-3">
+                Heading 3
+              </div>
+            </h2>
+          </div>
+          <div id="accordion-default-content-3" class="govuk-accordion__section-content">
+            <div class="govuk-body">List item 3</div>
+          </div>
         </div>
-      </h2>
-    </div>
-    <div id="accordion-default-content-3" class="govuk-accordion__section-content">
-      <div class="govuk-body">List item 3</div>
-    </div>
-  </div>
-</div>))
-    end
+      </div>)
+    assert_equal(compress_html(expected_html_output), compress_html(rendered))
   end
 
   test "Youtube Embedding" do
@@ -918,23 +924,24 @@ List item 1
 
   test "Figure" do
     govspeak = "$Figure
-$Alt
-Example of the part-whole model using the number 28. The number 20 has already been added to the lower left field, the lower right field is blank ready to be filled in.
-$EndAlt
-$URL https://www.early-career-framework.education.gov.uk/teachfirst/wp-content/uploads/sites/4/2020/08/Part-whole-model.jpg $EndURL
-$Caption Figure 1: Part-whole model.
-$EndCaption
-$EndFigure"
+      $Alt
+      Example of the part-whole model using the number 28. The number 20 has already been added to the lower left field, the lower right field is blank ready to be filled in.
+      $EndAlt
+      $URL https://www.early-career-framework.education.gov.uk/teachfirst/wp-content/uploads/sites/4/2020/08/Part-whole-model.jpg $EndURL
+      $Caption Figure 1: Part-whole model.
+      $EndCaption
+      $EndFigure"
 
-    given_govspeak(govspeak) do
-      assert_html_output(%(<figure class="image embedded">
-         <div class="img">
+    rendered = Govspeak::Document.new(govspeak).to_html
+    expected_html_output = %(
+      <figure class="image embedded">
+        <div class="img">
           <img src="https://www.early-career-framework.education.gov.uk/teachfirst/wp-content/uploads/sites/4/2020/08/Part-whole-model.jpg" alt="Example of the part-whole model using the number 28. The number 20 has already been added to the lower left field, the lower right field is blank ready to be filled in.">
-         </div>
-         <figcaption>
-          Figure 1: Part-whole model.
-         </figcaption>
-       </figure>))
-    end
+        </div>
+        <figcaption>
+          <p>Figure 1: Part-whole model.</p>
+        </figcaption>
+      </figure>)
+    assert_equal(compress_html(expected_html_output), compress_html(rendered))
   end
 end

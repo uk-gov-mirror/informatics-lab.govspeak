@@ -379,29 +379,26 @@ module Govspeak
     end
 
     extension("Accordion", /\$Accordion\s*$(.*?)\s*\$EndAccordion/m) do |body|
-      sections = ""
       index = 1
+      lines = []
       body.scan(/\$Heading\s*(.*?)\s*\$EndHeading\s*\$Summary\s*(.*?)\s*\$EndSummary\s*\$Content\s*(.*?)\s*\$EndContent/m) do |heading, summary, content|
         if summary.present?
-          summary = %(
-      <div>#{summary}</div>)
+          summary = %(<div>#{summary}</div>)
         end
-        sections += %(
-  <div class="govuk-accordion__section ">
-    <div class="govuk-accordion__section-header">
-      <h2 class="govuk-accordion__section-heading">
-        <div class="govuk-accordion__section-button" id="accordion-default-heading-#{index}">
-          #{heading}
-        </div>
-      </h2>#{summary}
-    </div>
-    <div id="accordion-default-content-#{index}" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-#{index}">
-      <div class='govuk-body'>#{content}</div>
-    </div>
-  </div>)
+        lines << %(<div class="govuk-accordion__section ">)
+        lines << %(<div class="govuk-accordion__section-header">)
+        lines << %(<h2 class="govuk-accordion__section-heading">)
+        lines << %(<div class="govuk-accordion__section-button" id="accordion-default-heading-#{index}">#{heading}</div>)
+        lines << %(</h2>)
+        lines << summary
+        lines << %(</div>)
+        lines << %(<div id="accordion-default-content-#{index}" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-#{index}">)
+        lines << %(<div class='govuk-body'>#{content}</div>)
+        lines << %(</div>)
+        lines << %(</div>)
         index += 1
       end
-      %(<div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">#{sections}</div>)
+      %(<div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">#{lines.join}</div>)
     end
 
     extension("YoutubeVideo", /\$YoutubeVideo\((.*?)\)\$EndYoutubeVideo/m) do |youtube_link|
@@ -414,14 +411,12 @@ module Govspeak
       alt = figure.scan(/\$Alt\s*(.*?)\s*\$EndAlt/m)[0][0]
       url = figure.scan(/\$URL\s*(.*?)\s*\$EndURL/m)[0][0]
       caption = figure.scan(/\$Caption\s*(.*?)\s*\$EndCaption/m)[0][0]
-      %(<figure class="image embedded">
-         <div class="img">
-          <img src="#{url}" alt="#{alt}">
-         </div>
-         <figcaption>
-          #{caption}
-         </figcaption>
-       </figure>)
+      lines = []
+      lines << %(<figure class="image embedded">)
+      lines << %(<div class="img"><img src="#{url}" alt="#{alt}"></div>)
+      lines << %(<figcaption><p>#{caption}</p></figcaption>)
+      lines << %(</figure>)
+      lines.join
     end
 
   private

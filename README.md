@@ -721,3 +721,27 @@ creates an iframe with embedded youtube video
 ```html
 <iframe width="500" height="281" src="https://www.youtube.com/embed/EpjSlCJtPLo?enablejsapi=1&amp;origin=https%3A%2F%2Fwww.early-career-framework.education.gov.uk" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
 ```
+
+### Figures with images from markdown
+
+    $Figure
+    $Alt
+    Example of the part-whole model using the number 28. The number 20 has already been added to the lower left field, the lower right field is blank ready to be filled in.
+    $EndAlt
+    $URL https://www.early-career-framework.education.gov.uk/teachfirst/wp-content/uploads/sites/4/2020/08/Part-whole-model.jpg $EndURL
+    $Caption Figure 1: Part-whole model.
+    $EndCaption
+    $EndFigure
+
+creates the following html:
+
+```html
+<figure class="image embedded">
+    <div class="img">
+        <img src="https://www.early-career-framework.education.gov.uk/teachfirst/wp-content/uploads/sites/4/2020/08/Part-whole-model.jpg" alt="Example of the part-whole model using the number 28. The number 20 has already been added to the lower left field, the lower right field is blank ready to be filled in.">
+    </div>
+    <figcaption>
+        <p>Figure 1: Part-whole model.</p>
+    </figcaption>
+</figure>
+```
