@@ -65,6 +65,9 @@ module Govspeak
     end
 
     def to_html
+      # Restart counting on every request
+      @accordion_index = 1
+
       @to_html ||= begin
                      html = if @options[:sanitize]
                               HtmlSanitizer.new(kramdown_doc.to_html).sanitize(allowed_elements: @allowed_elements)
@@ -279,18 +282,6 @@ module Govspeak
     # More specific tags must be defined first. Those defined earlier have a
     # higher precedence for being matched. For example $CTA must be defined
     # before $C otherwise the first ($C)TA fill be matched to a contact tag.
-    wrap_with_div("call-to-action", "$CTA", Govspeak::Document)
-    wrap_with_div("summary", "$!")
-    wrap_with_div("form-download", "$D")
-    wrap_with_div("contact", "$C")
-    wrap_with_div("place", "$P", Govspeak::Document)
-    wrap_with_div("information", "$I", Govspeak::Document)
-    wrap_with_div("additional-information", "$AI")
-    wrap_with_div("example", "$E", Govspeak::Document)
-
-    extension("address", surrounded_by("$A")) do |body|
-      %(\n<div class="address"><div class="adr org fn"><p>\n#{body.sub("\n", '').gsub("\n", '<br />')}\n</p></div></div>\n)
-    end
 
     extension("legislative list", /#{NEW_PARAGRAPH_LOOKBEHIND}\$LegislativeList\s*$(.*?)\$EndLegislativeList/m) do |body|
       Govspeak::KramdownOverrides.with_kramdown_ordered_lists_disabled do
@@ -381,7 +372,6 @@ module Govspeak
     end
 
     extension("Accordion", /\$Accordion\s*$(.*?)\s*\$EndAccordion/m) do |body|
-      index = 1
       lines = []
       body.scan(/\$Heading\s*(.*?)\s*\$EndHeading\s*\$Summary\s*(.*?)\s*\$EndSummary\s*\$Content\s*(.*?)\s*\$EndContent/m) do |heading, summary, content|
         if summary.present?
@@ -390,23 +380,24 @@ module Govspeak
         lines << %(<div class="govuk-accordion__section ">)
         lines << %(<div class="govuk-accordion__section-header">)
         lines << %(<h2 class="govuk-accordion__section-heading">)
-        lines << %(<div class="govuk-accordion__section-button" id="accordion-default-heading-#{index}">#{heading}</div>)
+        lines << %(<span class="govuk-accordion__section-button" id="accordion-default-heading-#{@accordion_index}">#{heading}</span>)
         lines << %(</h2>)
         lines << summary
         lines << %(</div>)
-        lines << %(<div id="accordion-default-content-#{index}" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-#{index}">)
+        lines << %(<div id="accordion-default-content-#{@accordion_index}" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-#{@accordion_index}">)
         lines << %(<div class='govuk-body'>#{content}</div>)
         lines << %(</div>)
         lines << %(</div>)
-        index += 1
+        @accordion_index += 1
       end
-      %(<div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">#{lines.join}</div>)
+      %(<div class="govuk-accordion" data-module="govuk-accordion">#{lines.join}</div>)
     end
 
-    extension("YoutubeVideo", /\$YoutubeVideo\((.*?)\)\$EndYoutubeVideo/m) do |youtube_link|
+    extension("YoutubeVideo", /\$YoutubeVideo(?:\[(.*?)\])?\((.*?)\)\$EndYoutubeVideo/m) do |title, youtube_link|
       youtube_id = youtube_link.scan(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/)[0][1]
       embed_url = %(https://www.youtube.com/embed/#{youtube_id}?enablejsapi=1&amp;origin=https%3A%2F%2Fwww.early-career-framework.education.gov.uk)
-      %(<iframe class="govspeak-embed-video" width="500" height="281" src="#{embed_url}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>)
+      optional_title = title ? %(title="#{title}") : ""
+      %(<iframe class="govspeak-embed-video" width="500" height="281" src="#{embed_url}" #{optional_title} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>)
     end
 
     extension("Figure", /\$Figure\s*$(.*?)\s*\$EndFigure/m) do |figure|
@@ -419,6 +410,20 @@ module Govspeak
       lines << %(<figcaption><p>#{caption}</p></figcaption>)
       lines << %(</figure>)
       lines.join
+    end
+
+    wrap_with_div("call-to-action", "$CTA", Govspeak::Document)
+    wrap_with_div("summary", "$!")
+    wrap_with_div("form-download", "$D")
+    wrap_with_div("contact", "$C")
+    wrap_with_div("place", "$P", Govspeak::Document)
+    wrap_with_div("information", "$I", Govspeak::Document)
+    wrap_with_div("additional-information", "$AI")
+    wrap_with_div("example", "$E", Govspeak::Document)
+
+    # This has to be specified after Figure or $A and $Alt get mixed up
+    extension("address", surrounded_by("$A")) do |body|
+      %(\n<div class="address"><div class="adr org fn"><p>\n#{body.sub("\n", '').gsub("\n", '<br />')}\n</p></div></div>\n)
     end
 
   private
