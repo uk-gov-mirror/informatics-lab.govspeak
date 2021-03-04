@@ -67,6 +67,7 @@ module Govspeak
     def to_html
       # Restart counting on every request
       @accordion_index = 1
+      @accordion_heading_index = 1
 
       @to_html ||= begin
                      html = if @options[:sanitize]
@@ -191,8 +192,8 @@ module Govspeak
     end
 
     extension("stat-headline", %r${stat-headline}(.*?){/stat-headline}$m) do |body|
-      %(\n\n<aside class="stat-headline">
-#{Govspeak::Document.new(body.strip).to_html}</aside>\n)
+      %(\n\n<div class="stat-headline">
+#{Govspeak::Document.new(body.strip).to_html}</div>\n)
     end
 
     # FIXME: these surrounded_by arguments look dodgy
@@ -380,17 +381,18 @@ module Govspeak
         lines << %(<div class="govuk-accordion__section ">)
         lines << %(<div class="govuk-accordion__section-header">)
         lines << %(<h2 class="govuk-accordion__section-heading">)
-        lines << %(<span class="govuk-accordion__section-button" id="accordion-default-heading-#{@accordion_index}">#{heading}</span>)
+        lines << %(<span class="govuk-accordion__section-button" id="accordion-#{@accordion_index}-heading-#{@accordion_heading_index}">#{heading}</span>)
         lines << %(</h2>)
         lines << summary
         lines << %(</div>)
-        lines << %(<div id="accordion-default-content-#{@accordion_index}" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-#{@accordion_index}">)
+        lines << %(<div id="accordion-#{@accordion_index}-content-#{@accordion_heading_index}" class="govuk-accordion__section-content" aria-labelledby="accordion-#{@accordion_index}-heading-#{@accordion_heading_index}">)
         lines << %(<div class='govuk-body'>#{content}</div>)
         lines << %(</div>)
         lines << %(</div>)
-        @accordion_index += 1
+        @accordion_heading_index += 1
       end
-      %(<div class="govuk-accordion" data-module="govuk-accordion">#{lines.join}</div>)
+      @accordion_index += 1
+      %(<div class="govuk-accordion" data-module="govuk-accordion" id="accordion-#{@accordion_index - 1}">#{lines.join}</div>)
     end
 
     extension("YoutubeVideo", /\$YoutubeVideo(?:\[(.*?)\])?\((.*?)\)\$EndYoutubeVideo/m) do |title, youtube_link|
