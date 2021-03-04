@@ -283,7 +283,6 @@ module Govspeak
     # More specific tags must be defined first. Those defined earlier have a
     # higher precedence for being matched. For example $CTA must be defined
     # before $C otherwise the first ($C)TA fill be matched to a contact tag.
-
     extension("legislative list", /#{NEW_PARAGRAPH_LOOKBEHIND}\$LegislativeList\s*$(.*?)\$EndLegislativeList/m) do |body|
       Govspeak::KramdownOverrides.with_kramdown_ordered_lists_disabled do
         Kramdown::Document.new(body.strip).to_html.tap do |doc|
@@ -373,6 +372,9 @@ module Govspeak
     end
 
     extension("Accordion", /\$Accordion\s*$(.*?)\s*\$EndAccordion/m) do |body|
+      index = 1
+      accordion_index = @accordion_index
+      @accordion_index++
       lines = []
       body.scan(/\$Heading\s*(.*?)\s*\$EndHeading\s*\$Summary\s*(.*?)\s*\$EndSummary\s*\$Content\s*(.*?)\s*\$EndContent/m) do |heading, summary, content|
         if summary.present?
@@ -381,18 +383,17 @@ module Govspeak
         lines << %(<div class="govuk-accordion__section ">)
         lines << %(<div class="govuk-accordion__section-header">)
         lines << %(<h2 class="govuk-accordion__section-heading">)
-        lines << %(<span class="govuk-accordion__section-button" id="accordion-#{@accordion_index}-heading-#{@accordion_heading_index}">#{heading}</span>)
+        lines << %(<span class="govuk-accordion__section-button" id="accordion-#{accordion_index}-heading-#{index}">#{heading}</span>)
         lines << %(</h2>)
         lines << summary
         lines << %(</div>)
-        lines << %(<div id="accordion-#{@accordion_index}-content-#{@accordion_heading_index}" class="govuk-accordion__section-content" aria-labelledby="accordion-#{@accordion_index}-heading-#{@accordion_heading_index}">)
+        lines << %(<div id="accordion-#{accordion_index}-content-#{index}" class="govuk-accordion__section-content" aria-labelledby="accordion-#{accordion_index}-heading-#{index}">)
         lines << %(<div class='govuk-body'>#{content}</div>)
         lines << %(</div>)
         lines << %(</div>)
-        @accordion_heading_index += 1
+        index += 1
       end
-      @accordion_index += 1
-      %(<div class="govuk-accordion" data-module="govuk-accordion" id="accordion-#{@accordion_index - 1}">#{lines.join}</div>)
+      %(<div class="govuk-accordion" data-module="govuk-accordion" id="accordion-#{accordion_index}">#{lines.join}</div>)
     end
 
     extension("YoutubeVideo", /\$YoutubeVideo(?:\[(.*?)\])?\((.*?)\)\$EndYoutubeVideo/m) do |title, youtube_link|
