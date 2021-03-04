@@ -374,7 +374,7 @@ module Govspeak
     extension("Accordion", /\$Accordion\s*$(.*?)\s*\$EndAccordion/m) do |body|
       index = 1
       accordion_index = @accordion_index
-      @accordion_index++
+      @accordion_index += 1
       lines = []
       body.scan(/\$Heading\s*(.*?)\s*\$EndHeading\s*\$Summary\s*(.*?)\s*\$EndSummary\s*\$Content\s*(.*?)\s*\$EndContent/m) do |heading, summary, content|
         if summary.present?
