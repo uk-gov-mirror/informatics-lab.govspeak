@@ -34,7 +34,7 @@ class GovspeakTest < Minitest::Test
 
   test "stat-headline block extension" do
     rendered = Govspeak::Document.new("this \n{stat-headline}*13.8bn* Age of the universe in years{/stat-headline}").to_html
-    assert_equal %(<p>this</p>\n\n<aside class="stat-headline">\n<p><em>13.8bn</em> Age of the universe in years</p>\n</aside>\n), rendered
+    assert_equal %(<p>this</p>\n\n<div class="stat-headline">\n<p><em>13.8bn</em> Age of the universe in years</p>\n</div>\n), rendered
   end
 
   test "extracts headers with text, level and generated id" do
@@ -868,17 +868,17 @@ Or so we thought.)
 
     rendered = Govspeak::Document.new(govspeak).to_html
     expected_html_output = %(
-      <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
+      <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-1">
         <div class="govuk-accordion__section ">
           <div class="govuk-accordion__section-header">
             <h2 class="govuk-accordion__section-heading">
-              <div class="govuk-accordion__section-button" id="accordion-default-heading-1">
+              <span class="govuk-accordion__section-button" id="accordion-1-heading-1">
                 Heading 1
-              </div>
+              </span>
             </h2>
             <div>Summary 1</div>
           </div>
-          <div id="accordion-default-content-1" class="govuk-accordion__section-content">
+          <div id="accordion-1-content-1" class="govuk-accordion__section-content">
             <div class="govuk-body">
               <span>
                 List item 1
@@ -889,24 +889,24 @@ Or so we thought.)
         <div class="govuk-accordion__section ">
           <div class="govuk-accordion__section-header">
             <h2 class="govuk-accordion__section-heading">
-              <div class="govuk-accordion__section-button" id="accordion-default-heading-2">
+              <span class="govuk-accordion__section-button" id="accordion-1-heading-2">
                 Heading 2
-              </div>
+              </span>
             </h2>
           </div>
-          <div id="accordion-default-content-2" class="govuk-accordion__section-content">
+          <div id="accordion-1-content-2" class="govuk-accordion__section-content">
             <div class="govuk-body">List item 2</div>
           </div>
         </div>
         <div class="govuk-accordion__section ">
           <div class="govuk-accordion__section-header">
             <h2 class="govuk-accordion__section-heading">
-              <div class="govuk-accordion__section-button" id="accordion-default-heading-3">
+              <span class="govuk-accordion__section-button" id="accordion-1-heading-3">
                 Heading 3
-              </div>
+              </span>
             </h2>
           </div>
-          <div id="accordion-default-content-3" class="govuk-accordion__section-content">
+          <div id="accordion-1-content-3" class="govuk-accordion__section-content">
             <div class="govuk-body">List item 3</div>
           </div>
         </div>
@@ -914,7 +914,82 @@ Or so we thought.)
     assert_equal(compress_html(expected_html_output), compress_html(rendered))
   end
 
-  test "Youtube Embedding" do
+  test "Multiple accordions" do
+    govspeak = %($Accordion
+      $Heading Heading 1 $EndHeading$Summary$EndSummary$ContentList item 1$EndContent
+      $Heading Heading 2 $EndHeading$Summary$EndSummary$ContentList item 2$EndContent
+      $EndAccordion
+$Accordion
+      $Heading Heading 1 $EndHeading$Summary$EndSummary$ContentList item 1$EndContent
+      $Heading Heading 2 $EndHeading$Summary$EndSummary$ContentList item 2$EndContent
+      $EndAccordion)
+
+    rendered = Govspeak::Document.new(govspeak).to_html
+    expected_html_output = %(
+      <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-1">
+        <div class="govuk-accordion__section ">
+          <div class="govuk-accordion__section-header">
+            <h2 class="govuk-accordion__section-heading">
+              <span class="govuk-accordion__section-button" id="accordion-1-heading-1">
+                Heading 1
+              </span>
+            </h2>
+          </div>
+          <div id="accordion-1-content-1" class="govuk-accordion__section-content">
+            <div class="govuk-body">List item 1</div>
+          </div>
+        </div>
+        <div class="govuk-accordion__section ">
+          <div class="govuk-accordion__section-header">
+            <h2 class="govuk-accordion__section-heading">
+              <span class="govuk-accordion__section-button" id="accordion-1-heading-2">
+                Heading 2
+              </span>
+            </h2>
+          </div>
+          <div id="accordion-1-content-2" class="govuk-accordion__section-content">
+            <div class="govuk-body">List item 2</div>
+          </div>
+        </div>
+      </div>
+      <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-2">
+        <div class="govuk-accordion__section ">
+          <div class="govuk-accordion__section-header">
+            <h2 class="govuk-accordion__section-heading">
+              <span class="govuk-accordion__section-button" id="accordion-2-heading-1">
+                Heading 1
+              </span>
+            </h2>
+          </div>
+          <div id="accordion-2-content-1" class="govuk-accordion__section-content">
+            <div class="govuk-body">List item 1</div>
+          </div>
+        </div>
+        <div class="govuk-accordion__section ">
+          <div class="govuk-accordion__section-header">
+            <h2 class="govuk-accordion__section-heading">
+              <span class="govuk-accordion__section-button" id="accordion-2-heading-2">
+                Heading 2
+              </span>
+            </h2>
+          </div>
+          <div id="accordion-2-content-2" class="govuk-accordion__section-content">
+            <div class="govuk-body">List item 2</div>
+          </div>
+        </div>
+      </div>)
+    assert_equal(compress_html(expected_html_output), compress_html(rendered))
+  end
+
+  test "Youtube Embedding with title" do
+    govspeak = "$YoutubeVideo[Test title](https://www.youtube.com/watch?v=EpjSlCJtPLo&list=PL4IuMlmijgAfTwwEiZmMp28Eaf66S3a1R&index=2&t=0s)$EndYoutubeVideo"
+    expected_html = %(<iframe width="500" height="281" src="https://www.youtube.com/embed/EpjSlCJtPLo?enablejsapi=1&amp;origin=https%3A%2F%2Fwww.early-career-framework.education.gov.uk" title="Test title" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>)
+    given_govspeak(govspeak) do
+      assert_html_output(expected_html)
+    end
+  end
+
+  test "Youtube Embedding without title" do
     govspeak = "$YoutubeVideo(https://www.youtube.com/watch?v=EpjSlCJtPLo&list=PL4IuMlmijgAfTwwEiZmMp28Eaf66S3a1R&index=2&t=0s)$EndYoutubeVideo"
     expected_html = %(<iframe width="500" height="281" src="https://www.youtube.com/embed/EpjSlCJtPLo?enablejsapi=1&amp;origin=https%3A%2F%2Fwww.early-career-framework.education.gov.uk" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>)
     given_govspeak(govspeak) do
