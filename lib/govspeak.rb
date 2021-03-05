@@ -67,7 +67,6 @@ module Govspeak
     def to_html
       # Restart counting on every request
       @accordion_index = 1
-      @accordion_heading_index = 1
 
       @to_html ||= begin
                      html = if @options[:sanitize]
