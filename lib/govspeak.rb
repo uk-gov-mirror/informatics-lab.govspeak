@@ -414,6 +414,7 @@ module Govspeak
       lines.join
     end
 
+    wrap_with_div("section", "$Section", Govspeak::Document)
     wrap_with_div("call-to-action", "$CTA", Govspeak::Document)
     wrap_with_div("summary", "$!")
     wrap_with_div("form-download", "$D")
