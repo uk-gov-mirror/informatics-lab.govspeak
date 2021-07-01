@@ -414,6 +414,27 @@ module Govspeak
       lines.join
     end
 
+    extension("Details", /\$Details\s*$(.*?)\s*\$EndDetails/m) do |body|
+      lines = []
+
+      body.scan(/\$Heading\s*(.*?)\s*\$EndHeading\s*\$Content\s*(.*?)\s*\$EndContent/m) do |summary, content|
+
+        summary_html = Govspeak::Document.new(summary).to_html.remove!("<p>").remove!("</p>")
+        content_html = Govspeak::Document.new(content.strip).to_html
+
+        lines << %(<details class="govuk-details" data-module="govuk-details">)
+        lines << %(<summary class="govuk-details__summary">)
+        lines << %(<span class="govuk-details__summary-text">#{summary_html}</span>)
+        lines << %(</summary>)
+        lines << %(<div class="govuk-details__text">)
+        lines << content_html
+        lines << %(</div>)
+        lines << %(</details>)
+      end
+
+      lines.join
+    end
+
     wrap_with_div("section", "$Section", Govspeak::Document)
     wrap_with_div("call-to-action", "$CTA", Govspeak::Document)
     wrap_with_div("summary", "$!")
