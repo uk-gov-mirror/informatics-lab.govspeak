@@ -1019,4 +1019,35 @@ $Accordion
       </figure>)
     assert_equal(compress_html(expected_html_output), compress_html(rendered))
   end
+
+  test "Details" do
+    govspeak = "$Details
+    $Heading
+    This is a details heading
+    $EndHeading
+    $Content
+- List item 1
+- List item 2
+- List item 3
+    $EndContent
+    $EndDetails"
+
+    rendered = Govspeak::Document.new(govspeak, allowed_elements: %w[details]).to_html
+    expected_html_output = %(
+      <details class="govuk-details" data-module="govuk-details">
+        <summary class="govuk-details__summary">
+          <span class="govuk-details__summary-text">
+            This is a details heading
+          </span>
+        </summary>
+        <div class="govuk-details__text">
+          <ul>
+            <li>List item 1</li>
+            <li>List item 2</li>
+            <li>List item 3</li>
+          </ul>
+        </div>
+      </details>)
+    assert_equal(compress_html(expected_html_output), compress_html(rendered))
+  end
 end
