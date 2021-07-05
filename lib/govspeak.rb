@@ -418,7 +418,6 @@ module Govspeak
       lines = []
 
       body.scan(/\$Heading\s*(.*?)\s*\$EndHeading\s*\$Content\s*(.*?)\s*\$EndContent/m) do |summary, content|
-
         summary_html = Govspeak::Document.new(summary).to_html.remove!("<p>").remove!("</p>")
         content_html = Govspeak::Document.new(content.strip).to_html
 

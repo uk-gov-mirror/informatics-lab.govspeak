@@ -137,6 +137,12 @@ module Govspeak
       end
     end
 
+    extension("add tabindex=0 to tables") do |document|
+      document.css("table").map do |el|
+        el[:tabindex] = "0" unless el[:class]&.include? "js-barchart-table"
+      end
+    end
+
     attr_reader :input, :govspeak_document
 
     def initialize(html, govspeak_document)
