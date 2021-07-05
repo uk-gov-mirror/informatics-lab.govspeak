@@ -3,7 +3,7 @@ require "test_helper"
 class GovspeakTableWithHeadersTest < Minitest::Test
   def expected_outcome
     %(
-<table>
+<table tabindex="0">
   <thead>
     <tr>
       <td></td>
@@ -29,7 +29,7 @@ class GovspeakTableWithHeadersTest < Minitest::Test
 
   def expected_outcome_with_hashes_in_cell_contents
     %(
-<table>
+<table tabindex="0">
   <thead>
     <tr>
       <td></td>
@@ -55,7 +55,7 @@ class GovspeakTableWithHeadersTest < Minitest::Test
 
   def expected_outcome_for_table_with_alignments
     %(
-<table>
+<table tabindex="0">
   <thead>
     <tr>
       <td style="text-align: left"></td>
@@ -81,7 +81,7 @@ class GovspeakTableWithHeadersTest < Minitest::Test
 
   def expected_outcome_for_table_headers_in_the_wrong_place
     %(
-<table>
+<table tabindex="0">
   <thead>
     <tr>
       <td></td>
@@ -107,7 +107,7 @@ class GovspeakTableWithHeadersTest < Minitest::Test
 
   def expected_outcome_for_table_with_blank_table_headers
     %(
-<table>
+<table tabindex="0">
   <thead>
     <tr>
       <td></td>
@@ -133,7 +133,7 @@ class GovspeakTableWithHeadersTest < Minitest::Test
 
   def expected_outcome_for_table_headers_containing_links
     %(
-<table>
+<table tabindex="0">
   <thead>
     <tr>
       <td></td>
