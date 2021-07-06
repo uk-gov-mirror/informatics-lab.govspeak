@@ -379,15 +379,19 @@ module Govspeak
         if summary.present?
           summary = %(<div>#{summary}</div>)
         end
+
+        summary_html = Govspeak::Document.new(summary.strip).to_html
+        content_html = Govspeak::Document.new(content.strip).to_html
+
         lines << %(<div class="govuk-accordion__section ">)
         lines << %(<div class="govuk-accordion__section-header">)
         lines << %(<h2 class="govuk-accordion__section-heading">)
         lines << %(<span class="govuk-accordion__section-button" id="accordion-#{accordion_index}-heading-#{index}">#{heading}</span>)
         lines << %(</h2>)
-        lines << summary
+        lines << summary_html
         lines << %(</div>)
         lines << %(<div id="accordion-#{accordion_index}-content-#{index}" class="govuk-accordion__section-content" aria-labelledby="accordion-#{accordion_index}-heading-#{index}">)
-        lines << %(<div class='govuk-body'>#{content}</div>)
+        lines << %(<div class='govuk-body'>#{content_html}</div>)
         lines << %(</div>)
         lines << %(</div>)
         index += 1

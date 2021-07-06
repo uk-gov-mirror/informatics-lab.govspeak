@@ -859,11 +859,16 @@ Or so we thought.)
   test "Accordion with whitespace" do
     govspeak = %($Accordion
       $Heading Heading 1 $EndHeading
-      $SummarySummary 1$EndSummary$Content<span>
-      List item 1
-      </span>$EndContent
-      $Heading Heading 2 $EndHeading$Summary$EndSummary$ContentList item 2$EndContent
-      $Heading Heading 3 $EndHeading$Summary$EndSummary$ContentList item 3$EndContent
+      $SummarySummary 1$EndSummary$Content
+- item 1
+      $EndContent
+      $Heading Heading 2 $EndHeading$Summary$EndSummary
+      $Content
+- item 2
+      $EndContent
+      $Heading Heading 3 $EndHeading$Summary$EndSummary$Content
+- item 3
+      $EndContent
       $EndAccordion)
 
     rendered = Govspeak::Document.new(govspeak).to_html
@@ -880,9 +885,11 @@ Or so we thought.)
           </div>
           <div id="accordion-1-content-1" class="govuk-accordion__section-content">
             <div class="govuk-body">
-              <span>
-                List item 1
-              </span>
+               <ul>
+                 <li>
+                   item 1
+                 </li>
+               </ul>
             </div>
           </div>
         </div>
@@ -895,7 +902,13 @@ Or so we thought.)
             </h2>
           </div>
           <div id="accordion-1-content-2" class="govuk-accordion__section-content">
-            <div class="govuk-body">List item 2</div>
+            <div class="govuk-body">
+              <ul>
+                <li>
+                  item 2
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
         <div class="govuk-accordion__section ">
@@ -907,7 +920,13 @@ Or so we thought.)
             </h2>
           </div>
           <div id="accordion-1-content-3" class="govuk-accordion__section-content">
-            <div class="govuk-body">List item 3</div>
+            <div class="govuk-body">
+              <ul>
+                <li>
+                  item 3
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>)
@@ -916,12 +935,20 @@ Or so we thought.)
 
   test "Multiple accordions" do
     govspeak = %($Accordion
-      $Heading Heading 1 $EndHeading$Summary$EndSummary$ContentList item 1$EndContent
-      $Heading Heading 2 $EndHeading$Summary$EndSummary$ContentList item 2$EndContent
+      $Heading Heading 1 $EndHeading$Summary$EndSummary$Content
+- item 1
+      $EndContent
+      $Heading Heading 2 $EndHeading$Summary$EndSummary$Content
+- item 2
+      $EndContent
       $EndAccordion
 $Accordion
-      $Heading Heading 1 $EndHeading$Summary$EndSummary$ContentList item 1$EndContent
-      $Heading Heading 2 $EndHeading$Summary$EndSummary$ContentList item 2$EndContent
+      $Heading Heading 1 $EndHeading$Summary$EndSummary$Content
+- item 1
+      $EndContent
+      $Heading Heading 2 $EndHeading$Summary$EndSummary$Content
+- item 2
+      $EndContent
       $EndAccordion)
 
     rendered = Govspeak::Document.new(govspeak).to_html
@@ -936,7 +963,13 @@ $Accordion
             </h2>
           </div>
           <div id="accordion-1-content-1" class="govuk-accordion__section-content">
-            <div class="govuk-body">List item 1</div>
+            <div class="govuk-body">
+              <ul>
+                <li>
+                  item 1
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
         <div class="govuk-accordion__section ">
@@ -948,7 +981,13 @@ $Accordion
             </h2>
           </div>
           <div id="accordion-1-content-2" class="govuk-accordion__section-content">
-            <div class="govuk-body">List item 2</div>
+            <div class="govuk-body">
+              <ul>
+                <li>
+                  item 2
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -962,7 +1001,13 @@ $Accordion
             </h2>
           </div>
           <div id="accordion-2-content-1" class="govuk-accordion__section-content">
-            <div class="govuk-body">List item 1</div>
+            <div class="govuk-body">
+              <ul>
+                <li>
+                  item 1
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
         <div class="govuk-accordion__section ">
@@ -974,7 +1019,79 @@ $Accordion
             </h2>
           </div>
           <div id="accordion-2-content-2" class="govuk-accordion__section-content">
-            <div class="govuk-body">List item 2</div>
+            <div class="govuk-body">
+              <ul>
+               <li>
+                 item 2
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>)
+    assert_equal(compress_html(expected_html_output), compress_html(rendered))
+  end
+
+  test "Accordion with text" do
+    govspeak = %($Accordion
+      $Heading Heading 1 $EndHeading
+      $SummarySummary 1$EndSummary$Content
+      text content 1
+      $EndContent
+      $Heading Heading 2 $EndHeading$Summary$EndSummary$Content text content 2$EndContent
+      $Heading Heading 3 $EndHeading$Summary$EndSummary$Content text content 3$EndContent
+      $EndAccordion)
+
+      rendered = Govspeak::Document.new(govspeak).to_html
+    expected_html_output = %(
+      <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-1">
+        <div class="govuk-accordion__section ">
+          <div class="govuk-accordion__section-header">
+            <h2 class="govuk-accordion__section-heading">
+              <span class="govuk-accordion__section-button" id="accordion-1-heading-1">
+                Heading 1
+              </span>
+            </h2>
+            <div>Summary 1</div>
+          </div>
+          <div id="accordion-1-content-1" class="govuk-accordion__section-content">
+            <div class="govuk-body">
+              <p>
+                text content 1
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="govuk-accordion__section ">
+          <div class="govuk-accordion__section-header">
+            <h2 class="govuk-accordion__section-heading">
+              <span class="govuk-accordion__section-button" id="accordion-1-heading-2">
+                Heading 2
+              </span>
+            </h2>
+          </div>
+          <div id="accordion-1-content-2" class="govuk-accordion__section-content">
+            <div class="govuk-body">
+              <p>
+                text content 2
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="govuk-accordion__section ">
+          <div class="govuk-accordion__section-header">
+            <h2 class="govuk-accordion__section-heading">
+              <span class="govuk-accordion__section-button" id="accordion-1-heading-3">
+                Heading 3
+              </span>
+            </h2>
+          </div>
+          <div id="accordion-1-content-3" class="govuk-accordion__section-content">
+            <div class="govuk-body">
+              <p>
+                text content 3
+              </p>
+            </div>
           </div>
         </div>
       </div>)
