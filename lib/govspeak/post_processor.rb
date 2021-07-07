@@ -143,6 +143,14 @@ module Govspeak
       end
     end
 
+    extension("increase section index") do |document|
+      document.css("div.section").map.with_index do |el, index|
+        el.children
+          .select {|child| child[:id] }
+          .each   {|child| child[:id] = "section-#{index + 1}-#{child[:id]}"}
+      end
+    end
+
     attr_reader :input, :govspeak_document
 
     def initialize(html, govspeak_document)
