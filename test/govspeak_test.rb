@@ -1100,7 +1100,7 @@ $Accordion
 
   test "Youtube Embedding with title" do
     govspeak = "$YoutubeVideo[Test title](https://www.youtube.com/watch?v=EpjSlCJtPLo&list=PL4IuMlmijgAfTwwEiZmMp28Eaf66S3a1R&index=2&t=0s)$EndYoutubeVideo"
-    expected_html = %(<iframe width="500" height="281" src="https://www.youtube.com/embed/EpjSlCJtPLo?enablejsapi=1&amp;origin=https%3A%2F%2Fwww.early-career-framework.education.gov.uk" title="Test title" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>)
+    expected_html = %(<iframe width="625" height="345" src="https://www.youtube.com/embed/EpjSlCJtPLo?enablejsapi=1&amp;origin=https%3A%2F%2Fwww.early-career-framework.education.gov.uk" title="Test title" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>)
     given_govspeak(govspeak) do
       assert_html_output(expected_html)
     end
@@ -1108,7 +1108,7 @@ $Accordion
 
   test "Youtube Embedding without title" do
     govspeak = "$YoutubeVideo(https://www.youtube.com/watch?v=EpjSlCJtPLo&list=PL4IuMlmijgAfTwwEiZmMp28Eaf66S3a1R&index=2&t=0s)$EndYoutubeVideo"
-    expected_html = %(<iframe width="500" height="281" src="https://www.youtube.com/embed/EpjSlCJtPLo?enablejsapi=1&amp;origin=https%3A%2F%2Fwww.early-career-framework.education.gov.uk" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>)
+    expected_html = %(<iframe width="625" height="345" src="https://www.youtube.com/embed/EpjSlCJtPLo?enablejsapi=1&amp;origin=https%3A%2F%2Fwww.early-career-framework.education.gov.uk" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>)
     given_govspeak(govspeak) do
       assert_html_output(expected_html)
     end

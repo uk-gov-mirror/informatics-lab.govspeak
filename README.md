@@ -719,7 +719,7 @@ creates an accordion
 creates an iframe with embedded youtube video
 
 ```html
-<iframe width="500" height="281" src="https://www.youtube.com/embed/EpjSlCJtPLo?enablejsapi=1&amp;origin=https%3A%2F%2Fwww.early-career-framework.education.gov.uk" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
+<iframe width="625" height="345" src="https://www.youtube.com/embed/EpjSlCJtPLo?enablejsapi=1&amp;origin=https%3A%2F%2Fwww.early-career-framework.education.gov.uk" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
 ```
 
 ### Figures with images from markdown

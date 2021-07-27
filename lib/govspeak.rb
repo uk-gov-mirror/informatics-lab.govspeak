@@ -403,7 +403,7 @@ module Govspeak
       youtube_id = youtube_link.scan(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/)[0][1]
       embed_url = %(https://www.youtube.com/embed/#{youtube_id}?enablejsapi=1&amp;origin=https%3A%2F%2Fwww.early-career-framework.education.gov.uk)
       optional_title = title ? %(title="#{title}") : ""
-      %(<iframe class="govspeak-embed-video" width="500" height="281" src="#{embed_url}" #{optional_title} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>)
+      %(<iframe class="govspeak-embed-video" width="625" height="345" src="#{embed_url}" #{optional_title} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>)
     end
 
     extension("Figure", /\$Figure\s*$(.*?)\s*\$EndFigure/m) do |figure|
