@@ -408,6 +408,17 @@ Teston
   end
 
   test_given_govspeak "
+    $I
+    ### a header
+    $I"  do
+
+  assert_html_output  %(
+    <div class="information">
+    <h3 id="information-header-1-a-header">a header</h3>
+    </div>)
+  end
+
+  test_given_govspeak "
     $D
     can you tell me how to get to...
     $D" do
@@ -461,6 +472,36 @@ Teston
       <div class="contact">
       <p>Here is some text</p>
       </div>)
+  end
+
+  test_given_govspeak "
+    $CTA
+    ###In your notepad
+    $CTA
+    " do
+  assert_html_output %(
+    <div class="call-to-action">
+    <h3 id="call-to-action-header-1-in-your-notepad">In your notepad</h3>
+    </div>)
+  end
+
+  test_given_govspeak "
+    $CTA
+    ###In your notepad
+    $CTA
+
+    $CTA
+    ###In your notepad
+    $CTA
+    " do
+    assert_html_output %(
+    <div class="call-to-action">
+    <h3 id="call-to-action-header-1-in-your-notepad">In your notepad</h3>
+    </div>
+
+    <div class="call-to-action">
+    <h3 id="call-to-action-header-2-in-your-notepad">In your notepad</h3>
+    </div>)
   end
 
   test_given_govspeak "

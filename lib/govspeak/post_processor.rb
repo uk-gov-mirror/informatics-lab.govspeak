@@ -14,6 +14,16 @@ module Govspeak
       @extensions << [title, block]
     end
 
+    def self.add_index_to_element_id(element)
+      extension("add index id to element") do |document|
+        document.css("div.#{element}").map.with_index do |el, index|
+          el.children
+            .select {|child| child[:id] }
+            .each   {|child| child[:id] = "#{element}-header-#{index + 1}-#{child[:id]}"}
+        end
+      end
+    end
+
     extension("add class to last p of blockquote") do |document|
       document.css("blockquote p:last-child").map do |el|
         el[:class] = "last-child"
@@ -143,13 +153,9 @@ module Govspeak
       end
     end
 
-    extension("increase section index") do |document|
-      document.css("div.section").map.with_index do |el, index|
-        el.children
-          .select {|child| child[:id] }
-          .each   {|child| child[:id] = "section-#{index + 1}-#{child[:id]}"}
-      end
-    end
+    add_index_to_element_id("section")
+    add_index_to_element_id("call-to-action")
+    add_index_to_element_id("information")
 
     attr_reader :input, :govspeak_document
 
