@@ -151,6 +151,21 @@ module Govspeak
       end
     end
 
+    extension("increase header index in a call to action block") do |document|
+      document.css("div.call-to-action").map.with_index do |el, index|
+        el.children
+          .select {|child| child[:id] }
+          .each   {|child| child[:id] = "call-to-action-header-#{index + 1}-#{child[:id]}"}
+      end
+    end
+
+    extension("increase header index in an information block") do |document|
+      document.css("div.information").map.with_index do |el, index|
+        el.children
+          .select {|child| child[:id] }
+          .each   {|child| child[:id] = "information-header-#{index + 1}-#{child[:id]}"}
+      end
+    end
     attr_reader :input, :govspeak_document
 
     def initialize(html, govspeak_document)
